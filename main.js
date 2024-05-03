@@ -47,6 +47,7 @@ function Gameboard() {
         }
     }
 
+    //logic for draws
     const draw = () => {
         let draw = [];
         for (let i = 0; i < 3; i++) {
@@ -64,6 +65,7 @@ function Gameboard() {
     };
 
     const hasWon = (input) => {
+        //compares an input string against the two possible win states.
         if (input === "XXX") {
             winner = "X"
             playable = false;
@@ -78,7 +80,11 @@ function Gameboard() {
         return
     }
 
+    
     const getState = () => {
+        //checks rows, columns, and diagonals for any wins.
+        //if no win is detected, see if there is space on the board.
+        //if not, then the game is a draw.
         //rows
         for (let i = 0; i < rows; i++) {
             let winner = "";
@@ -106,7 +112,7 @@ function Gameboard() {
         if (playable === true) {draw()}
     }
 
-    // play a random round of tic-tac-toe (mostly for testing purposes)
+    // populate the board with random entries
     const fillBoard = () => {
         while (playable == true) {
             function random () {return Math.floor(Math.random() * 3)};
@@ -121,6 +127,7 @@ function Gameboard() {
         return board;
     }
 
+    //
     const clearBoard = () => {
         console.log("Board cleared. Starting a new game...");
         playable = true;
