@@ -19,3 +19,8 @@ body {
     flex-direction: column;
     align-items: center;
 }
+
+.cell {
+    font-size: 3rem;
+    
+}

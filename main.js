@@ -1,10 +1,12 @@
 function Gameboard() {
-    columns = 3
-    rows = 3
-    board = []
-    playable = true
-    let winner
-    let currentPlayer = "X"
+    columns = 3;
+    rows = 3;
+    board = [];
+    playable = true;
+    let winner;
+    let gameResult = "inProgress";
+    let currentPlayer = "X";
+    playerTurnMessage = `Player ${currentPlayer}'s turn...`;
 
     for (let i = 0; i < rows; i++) {
         board[i] = [];
@@ -15,11 +17,17 @@ function Gameboard() {
 
     function changePlayer() {
         if (currentPlayer === "X") {
-            currentPlayer = "O"
-            return
-        }
-        currentPlayer = "X"
+            currentPlayer = "O";
+            playerTurnMessage = `Player ${currentPlayer}'s turn...`;
+            return;
+        };
+        currentPlayer = "X";
+        playerTurnMessage = `Player ${currentPlayer}'s turn...`;
         return
+    }
+
+    const getPlayerTurnMessage = () => {
+        return playerTurnMessage;
     }
 
     const playRound = (row,col) => {
@@ -58,6 +66,7 @@ function Gameboard() {
         };
         if (draw.length === 0) {
             console.log("Draw! Please start a new game.")
+            gameResult = "draw";
             playable = false;
             return
         }
@@ -69,17 +78,20 @@ function Gameboard() {
         if (input === "XXX") {
             winner = "X"
             playable = false;
+            gameResult = "won"
             console.log("Player X won!")
             return
         } else if (input === "OOO") {
             winner = "O"
             playable = false;
+            gameResult = "won"
             console.log("Player O won!")
             return
         }
         return
     }
 
+    
     
     const getState = () => {
         //checks rows, columns, and diagonals for any wins.
@@ -124,7 +136,7 @@ function Gameboard() {
     }
 
     const getBoard = () => {
-        return board;
+        return board;inProgress
     }
 
     //
@@ -132,14 +144,27 @@ function Gameboard() {
         console.log("Board cleared. Starting a new game...");
         playable = true;
         winner = "";
+        gameResult = "inProgress";
         Gameboard();
         return;
     }
 
-    console.log(board)
-    console.log(`Player ${currentPlayer}'s turn...`)
+    const result = () => {
+        if (playable == false) {
+            if (gameResult === "won") {
+                return `Player ${winner} won! Click new game to play again`;
+            }
+            if (gameResult === "draw") {
+                return `Draw! Click new game to play again.`;
+            }
+        }
+        return gameResult;
+    }
 
-    return {playRound, getBoard, clearBoard, fillBoard}
+    console.log(board);
+    console.log(`Player ${currentPlayer}'s turn...`);
+
+    return {playRound, getBoard, clearBoard, fillBoard, getPlayerTurnMessage,result}
 }
 
 const game = Gameboard();
@@ -179,6 +204,8 @@ const game = Gameboard();
         for (cell of cells) {
             cell.textContent = "";
         }
+        messageLog.textContent = "";
+
         let w = 0;
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
@@ -186,6 +213,12 @@ const game = Gameboard();
                 w++
             }
         }
+
+        messageLog.textContent = game.getPlayerTurnMessage();
+        if (game.result() === "inProgress") {
+        } else {
+            messageLog.textContent = game.result();
+        }        
     }
     StartUp();
 })();    
