@@ -1,0 +1,21 @@
+#gameboard {
+    width: 500px;
+    height: 500px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+#system-box {
+    display: flex;
+    justify-content: center;
+}
+
+#message-log {
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
