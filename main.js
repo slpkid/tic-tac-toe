@@ -39,7 +39,7 @@ function Gameboard() {
         board[row][col] = currentPlayer;
         changePlayer();
         console.log(board);
-        hasWon();
+        getState();
         if (playable === true) {
             console.log(`Player ${currentPlayer}'s turn...`)
         } else {
@@ -47,21 +47,23 @@ function Gameboard() {
         }
     }
 
-    const playableSpaces = () => {
-        let playableSpaces = [];
+    const draw = () => {
+        let draw = [];
         for (let i = 0; i < 3; i++) {
             board[i].forEach((element) => {
             if (element === "-") {
-                playableSpaces.push(element);
+                draw.push(element);
             }});
         };
-        if (playableSpaces.length === 0) {
+        if (draw.length === 0) {
             console.log("Draw! Please start a new game.")
+            playable = false;
+            return
         }
         return;
     };
 
-    const getState = (input) => {
+    const hasWon = (input) => {
         if (input === "XXX") {
             winner = "X"
             playable = false;
@@ -76,14 +78,14 @@ function Gameboard() {
         return
     }
 
-    const hasWon = () => {
+    const getState = () => {
         //rows
         for (let i = 0; i < rows; i++) {
             let winner = "";
             for (let j = 0; j < columns; j++) {
                 winner += `${board[i][j]}`;
             }
-            getState(winner);
+            hasWon(winner);
         }
         //columns
         for (let j = 0; j < columns; j++) {
@@ -91,28 +93,28 @@ function Gameboard() {
             for (let i = 0; i < rows; i++) {
                 winner += `${board[i][j]}`;
             }
-            getState(winner);
+            hasWon(winner);
         }
         //diagonal hell
         (function () {
             let winner = `${board[0][0]}${board[1][1]}${board[2][2]}`
-            getState(winner);
+            hasWon(winner);
             winner = `${board[0][2]}${board[1][1]}${board[2][0]}`
-            getState(winner);
+            hasWon(winner);
         })()
-
+        //draw
+        if (playable === true) {draw()}
     }
 
+    // play a random round of tic-tac-toe (mostly for testing purposes)
     const fillBoard = () => {
-        playRound(0,0);
-        playRound(1,2);
-        playRound(0,1);
-        playRound(2,2);
-        playRound(0,2);
-        playRound(1,1);
-        playRound(1,0);
-        playRound(2,0);
-        playRound(2,1);
+        while (playable == true) {
+            function random () {return Math.floor(Math.random() * 3)};
+            x = random();
+            y = random();
+            playRound(x,y);
+        }
+        return
     }
 
     const getBoard = () => {
@@ -130,7 +132,7 @@ function Gameboard() {
     console.log(board)
     console.log(`Player ${currentPlayer}'s turn...`)
 
-    return {playRound, getBoard, clearBoard, playableSpaces, fillBoard, getState, hasWon}
+    return {playRound, getBoard, clearBoard, fillBoard}
 }
 
 const game = Gameboard();
