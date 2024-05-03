@@ -143,3 +143,49 @@ function Gameboard() {
 }
 
 const game = Gameboard();
+
+(function ScreenController() {
+    const cells = document.getElementsByClassName("cell");
+    const messageLog = document.getElementById("message-log");
+    const newGameButton = document.getElementById("new-game-button");
+    
+    (function assignGrid() {
+        let w = 0;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                cells[w].dataset.row = i
+                cells[w].dataset.column = j
+                w++
+            }
+        }
+    })();
+
+    function StartUp() {for (cell of cells) {
+        cell.addEventListener("click", (e) => {
+            const row = e.srcElement.dataset.row
+            const column = e.srcElement.dataset.column
+            game.playRound(row,column);
+            render();
+        })
+        newGameButton.addEventListener("click", (e) => {
+            game.clearBoard();
+            render();
+        })
+    }
+
+    };
+    
+    function render(){
+        for (cell of cells) {
+            cell.textContent = "";
+        }
+        let w = 0;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                cells[w].textContent = board[i][j];
+                w++
+            }
+        }
+    }
+    StartUp();
+})();    
