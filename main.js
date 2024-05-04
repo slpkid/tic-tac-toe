@@ -1,12 +1,12 @@
-function Gameboard() {
-    columns = 3;
-    rows = 3;
-    board = [];
-    playable = true;
+const game = (function Gameboard() {
+    const columns = 3;
+    const rows = 3;
+    let board = [];
+    let playable = true;
     let winner;
     let gameResult = "inProgress";
     let currentPlayer = "X";
-    playerTurnMessage = `Player ${currentPlayer}'s turn...`;
+    let playerTurnMessage = `Player ${currentPlayer}'s turn...`;
 
     for (let i = 0; i < rows; i++) {
         board[i] = [];
@@ -165,11 +165,9 @@ function Gameboard() {
     console.log(`Player ${currentPlayer}'s turn...`);
 
     return {playRound, getBoard, clearBoard, fillBoard, getPlayerTurnMessage,result}
-}
+})();
 
-const game = Gameboard();
-
-(function ScreenController() {
+const screen = (function ScreenController() {
     const cells = document.getElementsByClassName("cell");
     const messageLog = document.getElementById("message-log");
     const newGameButton = document.getElementById("new-game-button");
@@ -220,4 +218,4 @@ const game = Gameboard();
         } 
     }
     StartUp();
-})();    
+})();
