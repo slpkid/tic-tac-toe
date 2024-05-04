@@ -5,7 +5,7 @@ const game = (function Gameboard() {
     let playable = true;
     let winner;
     let gameResult = "inProgress";
-    players = {
+    let players = {
         x: "X",
         o: "O"
     };
@@ -13,12 +13,16 @@ const game = (function Gameboard() {
     let currentPlayerName = players.x;
     let playerTurnMessage = `Player ${currentPlayerName}'s turn...`;
 
-    for (let i = 0; i < rows; i++) {
-        board[i] = [];
-        for (let j = 0; j < columns; j++) {
-            board[i].push("-");
+    function createBoard() {
+        for (let i = 0; i < rows; i++) {
+            board[i] = [];
+            for (let j = 0; j < columns; j++) {
+                board[i].push("-");
+            }
         }
     }
+    createBoard();
+
 
     const changeName = (piece, name) => {
         piece = piece.toLocaleLowerCase();
@@ -28,6 +32,12 @@ const game = (function Gameboard() {
         if (piece === "x") {
             players.x = name
         }
+        if (currentPlayer === "X") {
+            currentPlayerName = players.x;
+        } else if (currentPlayer === "o") {
+            currentPlayerName = players.o;
+        }
+        playerTurnMessage = `Player ${currentPlayerName}'s turn...`;
         return
     }
 
@@ -35,7 +45,7 @@ const game = (function Gameboard() {
         if (currentPlayer === "X") {
             currentPlayer = "O";
             currentPlayerName = players.o;
-            playerTurnMessage = `Player ${currentPlayerName}'s turn...`;
+            playerTurnMessage = `Player ${currentPlayerName}'s turn...`;    
             return;
         };
         currentPlayer = "X";
@@ -163,7 +173,10 @@ const game = (function Gameboard() {
         playable = true;
         winner = "";
         gameResult = "inProgress";
-        Gameboard();
+        currentPlayer = "X"
+        currentPlayerName = players.x;
+        playerTurnMessage = `Player ${currentPlayerName}'s turn...`;
+        createBoard();
         return;
     }
 
@@ -189,6 +202,9 @@ const screen = (function ScreenController() {
     const cells = document.getElementsByClassName("cell");
     const messageLog = document.getElementById("message-log");
     const newGameButton = document.getElementById("new-game-button");
+    const XPlayerName = document.getElementById("x-input");
+    const OPlayerName = document.getElementById("o-input");
+    const changeNameButton = document.getElementById("change-name");
     
     (function assignGrid() {
         let w = 0;
@@ -201,20 +217,33 @@ const screen = (function ScreenController() {
         }
     })();
 
-    function StartUp() {for (cell of cells) {
-        cell.addEventListener("click", (e) => {
-            const row = e.srcElement.dataset.row
-            const column = e.srcElement.dataset.column
-            game.playRound(row,column);
-            render();
-        })
+    function StartUp() {
+        for (cell of cells) {
+            cell.addEventListener("click", (e) => {
+                const row = e.srcElement.dataset.row
+                const column = e.srcElement.dataset.column
+                game.playRound(row,column);
+                render();
+            })
+        }  
         newGameButton.addEventListener("click", (e) => {
             game.clearBoard();
             render();
+        });
+        changeNameButton.addEventListener("click", (e) => {
+            xName = XPlayerName.value;
+            oName = OPlayerName.value;
+            if (xName === "" || xName === undefined || xName === null) {
+                xName = "X"
+            }
+            if (oName === "" || oName === undefined || oName === null) {
+                oName = "O"
+            }
+            game.changeName("x",xName);
+            game.changeName("o",oName);
+            render();
         })
     }
-
-    };
     
     function render(){
         for (cell of cells) {
