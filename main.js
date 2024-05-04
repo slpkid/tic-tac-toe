@@ -215,10 +215,9 @@ const game = Gameboard();
         }
 
         messageLog.textContent = game.getPlayerTurnMessage();
-        if (game.result() === "inProgress") {
-        } else {
+        if (!(game.result() === "inProgress")) {
             messageLog.textContent = game.result();
-        }        
+        } 
     }
     StartUp();
 })();    
