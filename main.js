@@ -136,7 +136,7 @@ function Gameboard() {
     }
 
     const getBoard = () => {
-        return board;inProgress
+        return board;
     }
 
     //
