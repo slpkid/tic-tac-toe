@@ -5,8 +5,13 @@ const game = (function Gameboard() {
     let playable = true;
     let winner;
     let gameResult = "inProgress";
+    players = {
+        x: "X",
+        o: "O"
+    };
     let currentPlayer = "X";
-    let playerTurnMessage = `Player ${currentPlayer}'s turn...`;
+    let currentPlayerName = players.x;
+    let playerTurnMessage = `Player ${currentPlayerName}'s turn...`;
 
     for (let i = 0; i < rows; i++) {
         board[i] = [];
@@ -15,14 +20,27 @@ const game = (function Gameboard() {
         }
     }
 
+    const changeName = (piece, name) => {
+        piece = piece.toLocaleLowerCase();
+        if (piece === "o") {
+            players.o = name
+        }
+        if (piece === "x") {
+            players.x = name
+        }
+        return
+    }
+
     function changePlayer() {
         if (currentPlayer === "X") {
             currentPlayer = "O";
-            playerTurnMessage = `Player ${currentPlayer}'s turn...`;
+            currentPlayerName = players.o;
+            playerTurnMessage = `Player ${currentPlayerName}'s turn...`;
             return;
         };
         currentPlayer = "X";
-        playerTurnMessage = `Player ${currentPlayer}'s turn...`;
+        currentPlayerName = players.x;
+        playerTurnMessage = `Player ${currentPlayerName}'s turn...`;
         return
     }
 
@@ -49,7 +67,7 @@ const game = (function Gameboard() {
         console.log(board);
         getState();
         if (playable === true) {
-            console.log(`Player ${currentPlayer}'s turn...`)
+            console.log(`Player ${currentPlayerName}'s turn...`)
         } else {
         return
         }
@@ -76,13 +94,13 @@ const game = (function Gameboard() {
     const hasWon = (input) => {
         //compares an input string against the two possible win states.
         if (input === "XXX") {
-            winner = "X"
+            winner = players.x;
             playable = false;
             gameResult = "won"
             console.log("Player X won!")
             return
         } else if (input === "OOO") {
-            winner = "O"
+            winner = players.o;
             playable = false;
             gameResult = "won"
             console.log("Player O won!")
@@ -162,9 +180,9 @@ const game = (function Gameboard() {
     }
 
     console.log(board);
-    console.log(`Player ${currentPlayer}'s turn...`);
+    console.log(`Player ${currentPlayerName}'s turn...`);
 
-    return {playRound, getBoard, clearBoard, fillBoard, getPlayerTurnMessage,result}
+    return {playRound, getBoard, clearBoard, fillBoard, getPlayerTurnMessage,result,changeName}
 })();
 
 const screen = (function ScreenController() {
@@ -207,7 +225,7 @@ const screen = (function ScreenController() {
         let w = 0;
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                cells[w].textContent = board[i][j];
+                cells[w].textContent = game.getBoard()[i][j];
                 w++
             }
         }
